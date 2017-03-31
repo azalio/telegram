@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Send files to telegram user"""
 # -*- coding: utf-8 -*-
 import telepot
 import sys
@@ -6,8 +7,9 @@ import magic
 
 
 class Telegram:
-    def __init__(self, token):
+    def __init__(self, token, chat_id):
         self.bot = telepot.Bot(token)
+        self.chat_id = chat_id
 
     def send_text(self):
         pass
@@ -21,11 +23,11 @@ class Telegram:
 
     def _send_photo_(self, path):
         photo = self._open_file_(path)
-        self.bot.sendPhoto(chat_id, photo)
+        self.bot.sendPhoto(self.chat_id, photo)
 
     def _send_video_(self, path):
         video = self._open_file_(path)
-        self.bot.sendVideo(chat_id, video)
+        self.bot.sendVideo(self.chat_id, video)
 
     @staticmethod
     def _open_file_(path):
@@ -35,13 +37,14 @@ class Telegram:
             print("Can't open file: {} with error: ".format(path, ex.message))
 
 
-def main(path):
-    bot = Telegram(token)
+def run(args=None):
+    if args is None:
+        args = sys.argv[1:]
+
+    token = args[0]
+    path = args[1]
+    chat_id = args[2]
+
+    bot = Telegram(token, chat_id)
     bot.send_file(path)
 
-
-if __name__ == "__main__":
-    token = ''  # Telegram token
-    chat_id = 12452435  # Telegram id
-    path = sys.argv[1]  # Path to photoÅ
-    main(path)
